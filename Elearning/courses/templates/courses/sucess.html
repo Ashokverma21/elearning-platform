@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Payment Success</title>
+
+<style>
+    body {
+        background: #1b1b2f;
+        font-family: Poppins, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        color: white;
+        text-align: center;
+    }
+
+    .success-box {
+        animation: pop 0.8s ease;
+    }
+
+    @keyframes pop {
+        from { transform: scale(0.5); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+    }
+
+    .tick {
+        font-size: 90px;
+        color: #4cd137;
+    }
+
+    a {
+        color: #fff;
+        background: #4cd137;
+        padding: 12px 25px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-top: 20px;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+</style>
+</head>
+<body>
+
+<div class="success-box">
+    <div class="tick">✔</div>
+    <h1>Payment Successful!</h1>
+    <p>You are now enrolled in the course.</p>
+
+    <a href="/courses/all/">Go to Courses</a>
+</div>
+
+</body>
+</html>

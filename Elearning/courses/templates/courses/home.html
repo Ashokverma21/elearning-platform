@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: var(--bg);
+            color: var(--text);
+            transition: 0.4s ease;
+        }
+
+        /* Light Theme */
+        :root {
+            --bg: #f4f7fa;
+            --card-bg: #ffffff;
+            --text: #222;
+            --navbar-bg: #764ba2;
+        }
+
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg: #1b1c22;
+            --card-bg: #292b33;
+            --text: #f8f8f8;
+            --navbar-bg: #5d3b99;
+        }
+
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 0;
+            overflow: hidden;
+            transition: 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        .video-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+        }
+
+        .video-container {
+            width: 100%;
+            height: 200px;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-container video,
+        .video-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Hover auto-play */
+        .video-container video {
+            opacity: 0;
+            transition: 0.3s;
+        }
+        .video-card:hover video {
+            opacity: 1;
+        }
+
+        .video-details {
+            padding: 15px;
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            color: white;
+            font-size: 22px;
+            margin-left: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark p-3" style="background: var(--navbar-bg);">
+    <div class="container">
+        <a class="navbar-brand" href="#">E-Learning</a>
+
+        <div>
+            <a class="btn btn-outline-light me-2" href="{% url 'profile' %}">Profile</a>
+            <a class="btn btn-outline-light" href="{% url 'logout' %}">Logout</a>
+            <span class="theme-toggle" onclick="toggleTheme()">🌙</span>
+        </div>
+    </div>
+</nav>
+
+<!-- SEARCH -->
+<div class="container mt-4">
+    <input type="text" id="searchInput" onkeyup="searchCourse()"
+           class="form-control p-3" placeholder="Search courses...">
+</div>
+
+<!-- COURSE GRID -->
+<div class="container mt-4">
+    <h2 class="mb-4">Welcome, {{ user.username }}!</h2>
+    <h4 class="mb-3">Available Courses</h4>
+
+    <div class="row" id="courseContainer">
+
+        {% for c in courses %}
+        <div class="col-md-4 mb-4 course-item">
+
+            <a href="{% url 'course_detail' c.id %}" style="text-decoration:none; color:inherit;">
+                <div class="video-card">
+
+                    <div class="video-container">
+                        {% if c.thumbnail %}
+                            <img src="{{ c.thumbnail.url }}" alt="thumbnail">
+                        {% else %}
+                            <img src="{% static 'images/default_thumb.jpg' %}" alt="thumbnail">
+                        {% endif %}
+
+                        {% if c.video %}
+                        <video muted preload="none">
+                            <source src="{{ c.video.url }}" type="video/mp4">
+                        </video>
+                        {% endif %}
+                    </div>
+
+                    <div class="video-details">
+                        <h5>{{ c.title }}</h5>
+                        <p>{{ c.description|truncatechars:80 }}</p>
+                        <strong>₹{{ c.price }}</strong>
+                    </div>
+
+                </div>
+            </a>
+
+        </div>
+        {% empty %}
+            <p>No courses available.</p>
+        {% endfor %}
+
+    </div>
+</div>
+
+<script>
+    /* Theme Toggle */
+    function toggleTheme() {
+        const body = document.documentElement;
+        const theme = body.getAttribute("data-theme");
+        body.setAttribute("data-theme", theme === "light" ? "dark" : "light");
+    }
+
+    /* Search Filter */
+    function searchCourse() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let items = document.getElementsByClassName("course-item");
+
+        for (let i = 0; i < items.length; i++) {
+            let text = items[i].innerText.toLowerCase();
+            items[i].style.display = text.includes(input) ? "" : "none";
+        }
+    }
+</script>
+
+</body>
+</html>
